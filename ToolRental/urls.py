@@ -1,24 +1,31 @@
-"""
-URL configuration for ToolRental project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 from Rental import views
+
 urlpatterns = [
+
+    # Admin
     path('admin/', admin.site.urls),
-    path('register/',views.SignUpView.as_view()),
-    path('users/',views.UserListView.as_view()),
+
+    # User
+    path('register/', views.SignUpView.as_view(), name='register'),
+    path('users/', views.UserListView.as_view(), name='users'),
+
+    # Tools
+    path('tools/', views.ToolsListCreateView.as_view(), name='tools'),
+    path('tools/<int:pk>/', views.ToolsRetrieveUpdateDeleteView.as_view(), name='tool-detail'),
+
+    # Rental
+    path('rentals/', views.RentalListCreateView.as_view(), name='rentals'),
+    path('rentals/<int:pk>/', views.RentalRetrieveUpdateView.as_view(), name='rental-detail'),
+
+    # Complaint
+    path('complaints/', views.ComplaintListCreateView.as_view(), name='complaints'),
+    path('complaints/<int:pk>/', views.ComplaintRetrieveUpdateDeleteView.as_view(), name='complaint-detail'),
+
+    # Payment
+    path('payments/', views.PaymentListCreateView.as_view(), name='payments'),
+    path('payments/<int:pk>/', views.PaymentRetrieveView.as_view(), name='payment-detail'),
+
 ]

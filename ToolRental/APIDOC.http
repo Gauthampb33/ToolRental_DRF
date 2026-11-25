@@ -1,13 +1,199 @@
-###
-POST http://127.0.0.1:8000/register/
+
+@baseUrl = http://127.0.0.1:8000
+@owner = toolowner
+@ownerPassword = OwnerTest@12345
+@renter = aljin
+@renterPassword = RenterTest@12345
+@admin = admin
+@adminPassword = YourAdminPassword
+
+@toolId = 1
+@rentalId = 1
+@complaintId = 1
+@paymentId = 1
+
+
+### ==========================================
+### USER MODULE
+### ==========================================
+
+### Register Tool Owner
+POST {{baseUrl}}/register/
 Content-Type: application/json
 
 {
-    "username":"aljin",
-    "email":"alji@gmail.com",
-    "password":"alji@123"
+    "username": "{{owner}}",
+    "email": "owner@example.com",
+    "password": "{{ownerPassword}}"
 }
 
-###
-GET http://127.0.0.1:8000/users/
+
+### Register Renter
+POST {{baseUrl}}/register/
+Content-Type: application/json
+
+{
+    "username": "{{renter}}",
+    "email": "renter@example.com",
+    "password": "{{renterPassword}}"
+}
+
+
+### List Users (Admin Only)
+GET {{baseUrl}}/users/
+Authorization: Basic {{admin}}:{{adminPassword}}
+Accept: application/json
+
+
+### ==========================================
+### TOOLS MODULE
+### ==========================================
+
+### Create Tool
+POST {{baseUrl}}/tools/
+Authorization: Basic {{owner}}:{{ownerPassword}}
+Content-Type: application/json
+
+{
+    "tool_name": "Garden Rake",
+    "description": "Garden rake for clearing leaves",
+    "category": "Gardening",
+    "price": 250
+}
+
+
+### List Tools
+GET {{baseUrl}}/tools/
+Authorization: Basic {{owner}}:{{ownerPassword}}
+Accept: application/json
+
+
+### Retrieve Tool
+GET {{baseUrl}}/tools/{{toolId}}/
+Authorization: Basic {{owner}}:{{ownerPassword}}
+Accept: application/json
+
+
+### Update Tool
+PUT {{baseUrl}}/tools/{{toolId}}/
+Authorization: Basic {{owner}}:{{ownerPassword}}
+Content-Type: application/json
+
+{
+    "tool_name": "Garden Rake",
+    "description": "Garden rake in good condition",
+    "category": "Gardening",
+    "price": 300
+}
+
+
+### Delete Tool
+DELETE {{baseUrl}}/tools/{{toolId}}/
+Authorization: Basic {{owner}}:{{ownerPassword}}
+
+
+### ==========================================
+### RENTAL MODULE
+### ==========================================
+
+### Create Rental
+POST {{baseUrl}}/rentals/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Content-Type: application/json
+
+{
+    "tool": {{toolId}},
+    "rental_date": "2026-12-01",
+    "return_date": "2026-12-05"
+}
+
+
+### List Rentals
+GET {{baseUrl}}/rentals/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Accept: application/json
+
+
+### Retrieve Rental
+GET {{baseUrl}}/rentals/{{rentalId}}/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Accept: application/json
+
+
+### Update Rental
+PUT {{baseUrl}}/rentals/{{rentalId}}/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Content-Type: application/json
+
+{
+    "return_date": "2026-12-07"
+}
+
+
+### ==========================================
+### COMPLAINT MODULE
+### ==========================================
+
+### Create Complaint
+POST {{baseUrl}}/complaints/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Content-Type: application/json
+
+{
+    "tool": {{toolId}},
+    "complaint": "The tool was not in good condition."
+}
+
+
+### List Complaints
+GET {{baseUrl}}/complaints/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Accept: application/json
+
+
+### Retrieve Complaint
+GET {{baseUrl}}/complaints/{{complaintId}}/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Accept: application/json
+
+
+### Update Complaint
+PUT {{baseUrl}}/complaints/{{complaintId}}/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Content-Type: application/json
+
+{
+    "complaint": "The handle of the tool is damaged."
+}
+
+
+### Delete Complaint
+DELETE {{baseUrl}}/complaints/{{complaintId}}/
+Authorization: Basic {{renter}}:{{renterPassword}}
+
+
+### ==========================================
+### PAYMENT MODULE
+### ==========================================
+
+### Create Payment
+POST {{baseUrl}}/payments/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Content-Type: application/json
+
+{
+    "rental": {{rentalId}},
+    "payment_method": "UPI"
+}
+
+
+### List Payments
+GET {{baseUrl}}/payments/
+Authorization: Basic {{renter}}:{{renterPassword}}
+Accept: application/json
+
+
+### Retrieve Payment
+GET {{baseUrl}}/payments/{{paymentId}}/
+Authorization: Basic {{renter}}:{{renterPassword}}
 Accept: application/json
